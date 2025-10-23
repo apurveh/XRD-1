@@ -1,0 +1,5 @@
+C:/Users/apurv/Desktop/XRD-1/AR Project/.utmp/RelWithDebInfo/131h3s4k/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/apurv/Desktop/XRD-1/AR Project/.utmp/RelWithDebInfo/131h3s4k/arm64-v8a/CMakeFiles/rebuild_cache.dir
+C:/Users/apurv/Desktop/XRD-1/AR Project/.utmp/RelWithDebInfo/131h3s4k/arm64-v8a/GameActivity/CMakeFiles/game.dir
+C:/Users/apurv/Desktop/XRD-1/AR Project/.utmp/RelWithDebInfo/131h3s4k/arm64-v8a/GameActivity/CMakeFiles/edit_cache.dir
+C:/Users/apurv/Desktop/XRD-1/AR Project/.utmp/RelWithDebInfo/131h3s4k/arm64-v8a/GameActivity/CMakeFiles/rebuild_cache.dir
