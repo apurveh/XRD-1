@@ -454,13 +454,13 @@ MonoBehaviour:
   arRaycastManager: {fileID: 2512387470422636671}
   debugText: {fileID: 224226935}
   arPlaneManager: {fileID: 2512387470422636670}
-  sunnyWeatherPortal: {fileID: 3097181857960153207, guid: 379bebf8859b32a42968c5eeb94bfb58,
+  sunnyWeatherPortal: {fileID: 3097181857960153207, guid: 12e3cbbd70759db4c965d9d99da4d998,
     type: 3}
-  cloudyWeatherPortal: {fileID: 3097181857960153207, guid: dbaee0e934cb5c446b41eb9891dd2ae3,
+  cloudyWeatherPortal: {fileID: 3097181857960153207, guid: 1e2801899e98c1646b076bfb7fa6e459,
     type: 3}
   rainyWeatherPortal: {fileID: 3097181857960153207, guid: d2448f53d648fb5438efbdd0fec8dfce,
     type: 3}
-  snowyWeatherPortal: {fileID: 3097181857960153207, guid: a1b5496f9217ad94dac3cc6c24a510c9,
+  snowyWeatherPortal: {fileID: 3097181857960153207, guid: 936f2b23e29aa744bbf0f2bb48e0c4e3,
     type: 3}
 --- !u!4 &475619860
 Transform:

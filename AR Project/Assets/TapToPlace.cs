@@ -83,7 +83,7 @@ public class TapToPlace : MonoBehaviour
         if (!Input.location.isEnabledByUser)
         {
             SetDebugText("Location permission not enabled. Defaulting to rainy.");
-            portalToSpawn = rainyWeatherPortal; // Set a default
+            portalToSpawn = snowyWeatherPortal; // Set a default
             isReadyToSpawn = true;
             yield break; // Stop the coroutine
         }
@@ -113,7 +113,7 @@ public class TapToPlace : MonoBehaviour
         if (Input.location.status == LocationServiceStatus.Failed)
         {
             SetDebugText("Unable to find location. Defaulting to rainy.");
-            portalToSpawn = rainyWeatherPortal;
+            portalToSpawn = sunnyWeatherPortal;
             isReadyToSpawn = true;
             Input.location.Stop();
             yield break;
@@ -197,7 +197,7 @@ public class TapToPlace : MonoBehaviour
         if (portalToSpawn == null)
         {
             SetDebugText("Portal prefab is missing! Defaulting to rainy.");
-            portalToSpawn = rainyWeatherPortal;
+            portalToSpawn = sunnyWeatherPortal;
         }
     }
 
