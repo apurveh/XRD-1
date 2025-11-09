@@ -94,7 +94,7 @@ This project helped me practice:
 ## 👨‍💻 Author
 
 **Apurva Mishra**  
-Built as part of the *Mobile AR* module for the **XRD course**.  
+Built as part of the **XRD course** in VIA University College.  
 Uses Unity’s AR Foundation and Open-Meteo API to visualise live weather through AR.
 
 ---
