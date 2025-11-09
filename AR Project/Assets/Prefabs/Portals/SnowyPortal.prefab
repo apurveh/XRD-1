@@ -42,7 +42,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2427641208366926541}
   m_Layer: 0
-  m_Name: SunnyPortal 1
+  m_Name: SnowyPortal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22769,7 +22769,7 @@ PrefabInstance:
     - target: {fileID: 4627351295241826333, guid: 3578f02bfe530dc409b153c2c1186222,
         type: 3}
       propertyPath: ShapeModule.m_Scale.z
-      value: 40
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4627351295241826333, guid: 3578f02bfe530dc409b153c2c1186222,
         type: 3}
@@ -29819,17 +29819,17 @@ PrefabInstance:
     - target: {fileID: 6173214403780110891, guid: 3578f02bfe530dc409b153c2c1186222,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -40.7
+      value: -54.8
       objectReference: {fileID: 0}
     - target: {fileID: 6173214403780110891, guid: 3578f02bfe530dc409b153c2c1186222,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 16
+      value: 14.8
       objectReference: {fileID: 0}
     - target: {fileID: 6173214403780110891, guid: 3578f02bfe530dc409b153c2c1186222,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 22.2
+      value: 4.6
       objectReference: {fileID: 0}
     - target: {fileID: 6173869639444957453, guid: 3578f02bfe530dc409b153c2c1186222,
         type: 3}

@@ -2,38 +2,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI; // Make sure to keep this if you use 'Text'
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
-using UnityEngine.Networking; // For calling the weather API
+using UnityEngine.Networking;
 using System;
+using TMPro;
+
 #if UNITY_ANDROID
-using UnityEngine.Android; // For asking permission
+using UnityEngine.Android;
 #endif
 
-// --- C# Classes to read the Open-Meteo JSON response ---
-// We only need the 'weather_code' which is inside 'daily'
 [System.Serializable]
-public class DailyWeather
+public class HourlyWeather
 {
-    // Make sure the variable name matches the JSON key
+    public List<string> time;
+    public List<float> temperature_2m;
     public List<int> weather_code;
 }
 
 [System.Serializable]
 public class WeatherResponse
 {
-    // Make sure the variable name matches the JSON key
-    public DailyWeather daily;
+    public HourlyWeather hourly;
 }
 
 public class TapToPlace : MonoBehaviour
 {
     [SerializeField] private ARRaycastManager arRaycastManager;
-    [SerializeField] private Text debugText;
     [SerializeField] private ARPlaneManager arPlaneManager;
 
-    // --- 1. SERIALIZE YOUR 4 PORTALS ---
+    [Header("UI")]
+    [SerializeField] private TextMeshProUGUI temperatureText;
+
     [Header("Weather Portals")]
     [SerializeField] private GameObject sunnyWeatherPortal;
     [SerializeField] private GameObject cloudyWeatherPortal;
@@ -43,36 +43,34 @@ public class TapToPlace : MonoBehaviour
     private static readonly List<ARRaycastHit> hits = new();
 
     // --- State Flags ---
-    private GameObject portalToSpawn; // This will hold our chosen portal
-    private bool isReadyToSpawn = false; // Prevents spawning before weather is fetched
+    private GameObject portalToSpawn;
+    private bool isReadyToSpawn = false;
     private bool portalHasSpawned = false;
 
     void Start()
     {
+        // Set initial text
+        if (temperatureText)
+        {
+            temperatureText.text = "Fetching weather...";
+        }
+
         // Start the whole process
         StartCoroutine(GetWeatherAndPreparePortal());
     }
 
-    /// <summary>
-    /// This is the main coroutine that runs in order:
-    /// 1. Get Location
-    /// 2. Get Weather
-    /// 3. Select Portal
-    /// </summary>
     IEnumerator GetWeatherAndPreparePortal()
     {
-        // --- 2. GET USER LOCATION ---
-        // --- Handle Android Permissions ---
+        // --- GET USER LOCATION ---
 #if UNITY_ANDROID
         if (!Permission.HasUserAuthorizedPermission(Permission.FineLocation))
         {
-            SetDebugText("Requesting location permission...");
+            Debug.Log("Requesting location permission...");
             Permission.RequestUserPermission(Permission.FineLocation);
 
             float timer = 0;
             while (!Permission.HasUserAuthorizedPermission(Permission.FineLocation) && timer < 20f)
             {
-                // Wait for user to respond
                 yield return new WaitForSeconds(1);
                 timer++;
             }
@@ -82,15 +80,16 @@ public class TapToPlace : MonoBehaviour
         // --- Check if service is enabled ---
         if (!Input.location.isEnabledByUser)
         {
-            SetDebugText("Location permission not enabled. Defaulting to rainy.");
-            portalToSpawn = snowyWeatherPortal; // Set a default
+            Debug.LogWarning("Location permission not enabled. Defaulting to rainy.");
+            if (temperatureText) temperatureText.text = "Location Off";
+            portalToSpawn = rainyWeatherPortal; // Set a default
             isReadyToSpawn = true;
             yield break; // Stop the coroutine
         }
 
         // --- Start Service ---
-        Input.location.Start(500f); // 500m accuracy is fine
-        SetDebugText("Initializing location...");
+        Input.location.Start(500f);
+        Debug.Log("Initializing location...");
 
         // --- Wait for Initialization ---
         int maxWait = 20;
@@ -103,7 +102,8 @@ public class TapToPlace : MonoBehaviour
         // --- Handle Failures ---
         if (maxWait <= 0)
         {
-            SetDebugText("Location service timed out. Defaulting to sunny.");
+            Debug.LogWarning("Location service timed out. Defaulting to sunny.");
+            if (temperatureText) temperatureText.text = "Location Timeout";
             portalToSpawn = sunnyWeatherPortal;
             isReadyToSpawn = true;
             Input.location.Stop();
@@ -112,20 +112,20 @@ public class TapToPlace : MonoBehaviour
 
         if (Input.location.status == LocationServiceStatus.Failed)
         {
-            SetDebugText("Unable to find location. Defaulting to rainy.");
+            Debug.LogError("Unable to find location. Defaulting to sunny.");
+            if (temperatureText) temperatureText.text = "Location Failed";
             portalToSpawn = sunnyWeatherPortal;
             isReadyToSpawn = true;
             Input.location.Stop();
             yield break;
         }
 
-        // --- 3. LOCATION SUCCESS -> GET WEATHER ---
+        // --- LOCATION SUCCESS -> GET WEATHER ---
         LocationInfo data = Input.location.lastData;
         Input.location.Stop(); // Stop service to save battery
-        SetDebugText("Location found. Fetching weather...");
+        Debug.Log("Location found. Fetching weather...");
 
-        // Build the API URL string
-        string url = $"https://api.open-meteo.com/v1/forecast?latitude={data.latitude}&longitude={data.longitude}&daily=weather_code&forecast_days=1";
+        string url = $"https://api.open-meteo.com/v1/forecast?latitude={data.latitude}&longitude={data.longitude}&hourly=temperature_2m,weather_code&forecast_days=1";
 
         using (UnityWebRequest www = UnityWebRequest.Get(url))
         {
@@ -137,28 +137,61 @@ public class TapToPlace : MonoBehaviour
                 string jsonResponse = www.downloadHandler.text;
                 WeatherResponse weather = JsonUtility.FromJson<WeatherResponse>(jsonResponse);
 
-                // Get the first weather code from the list
-                int weatherCode = weather.daily.weather_code[0];
-                SetDebugText($"Weather code: {weatherCode}. Ready to spawn.");
+                // --- 4. GET CURRENT HOUR'S DATA ---
+                int currentHourIndex = DateTime.Now.Hour;
 
-                // --- 4. CHOOSE THE PORTAL ---
-                SelectPortal(weatherCode);
+                // Check if the hourly data is valid
+                if (weather.hourly != null &&
+                    weather.hourly.weather_code != null &&
+                    weather.hourly.weather_code.Count > currentHourIndex &&
+                    weather.hourly.temperature_2m != null &&
+                    weather.hourly.temperature_2m.Count > currentHourIndex)
+                {
+                    // Get the CURRENT weather code from the hourly list
+                    int weatherCode = weather.hourly.weather_code[currentHourIndex];
+                    Debug.Log($"Current hourly weather code: {weatherCode}. Ready to spawn.");
+
+                    // --- CHOOSE THE PORTAL ---
+                    SelectPortal(weatherCode);
+
+                    // Get and display the CURRENT temperature
+                    float currentTemp = weather.hourly.temperature_2m[currentHourIndex];
+                    DisplayCurrentTemperature(currentTemp);
+                }
+                else
+                {
+                    // Handle data error
+                    Debug.LogError("Could not parse hourly weather from API response. Defaulting to sunny.");
+                    if (temperatureText) temperatureText.text = "Weather Error";
+                    portalToSpawn = sunnyWeatherPortal;
+                }
             }
             else
             {
                 // API call failed
-                SetDebugText($"API Error: {www.error}. Defaulting to rainy.");
+                Debug.LogError($"API Error: {www.error}. Defaulting to rainy.");
+                if (temperatureText) temperatureText.text = "API Error";
                 portalToSpawn = rainyWeatherPortal; // Default on failure
             }
         }
 
-        // --- 5. READY TO SPAWN ---
+        // --- READY TO SPAWN ---
         isReadyToSpawn = true;
-        if (debugText.text.Contains("Ready to spawn"))
-        {
-            SetDebugText("Tap a surface to spawn the weather portal!");
-        }
     }
+
+    /// <summary>
+    /// Displays the given temperature on the UI text.
+    /// (This is now simplified as we pass the float directly)
+    /// </summary>
+    private void DisplayCurrentTemperature(float currentTemp)
+    {
+        if (temperatureText == null) return; // No text object to update
+
+        // Format the string to one decimal place with the degree symbol
+        temperatureText.text = $"{currentTemp:F1}°C";
+        Debug.Log($"Current temperature: {currentTemp:F1}°C");
+    }
+
 
     /// <summary>
     /// Chooses which portal prefab to use based on the WMO weather code
@@ -189,14 +222,12 @@ public class TapToPlace : MonoBehaviour
         }
         else
         {
-            // Default case if something weird happens
-            portalToSpawn = sunnyWeatherPortal;
+            portalToSpawn = sunnyWeatherPortal; // Default
         }
 
-        // Double-check none are null
         if (portalToSpawn == null)
         {
-            SetDebugText("Portal prefab is missing! Defaulting to rainy.");
+            Debug.LogError("Portal prefab is missing! Defaulting to sunny.");
             portalToSpawn = sunnyWeatherPortal;
         }
     }
@@ -209,12 +240,10 @@ public class TapToPlace : MonoBehaviour
 
         Vector2 screenPos;
 
-        // Touch first
         if (Touchscreen.current?.primaryTouch.press.wasPressedThisFrame == true)
         {
             screenPos = Touchscreen.current.primaryTouch.position.ReadValue();
         }
-        // Mouse fallback (Editor)
         else if (Mouse.current?.leftButton.wasPressedThisFrame == true)
         {
             screenPos = Mouse.current.position.ReadValue();
@@ -230,49 +259,23 @@ public class TapToPlace : MonoBehaviour
         {
             Pose hitPose = hits[0].pose;
 
-            // --- 1. Log the comparison ---
-            Debug.Log($"Tap Event: ScreenPos (Vector2) {screenPos} created a hit at WorldPos (Vector3) {hitPose.position}");
-
-            // --- 2. Calculate upright rotation for the portal ---
-            // The portal prefab faces downward by default, so we need to:
-            // 1. Rotate it 90° around X to make it stand upright
-            // 2. Rotate it to face away from the wall
-
-            // Get the wall's normal direction
+            // --- Calculate upright rotation for the portal ---
             Vector3 wallNormal = hitPose.rotation * Vector3.up;
-
-            // Project to horizontal plane to remove any tilt
             Vector3 horizontalNormal = new Vector3(wallNormal.x, 0, wallNormal.z).normalized;
-
-            // Create rotation facing away from wall
             Quaternion faceWall = Quaternion.LookRotation(horizontalNormal, Vector3.up);
-
-            // Add 90° X rotation to stand the portal upright (since it faces down by default)
             Quaternion uprightRotation = faceWall * Quaternion.Euler(90, 0, 0);
 
-            // --- 3. Spawn the chosen portal with corrected rotation ---
-            // Store reference to the new portal
-            GameObject spawnedPortal = Instantiate(portalToSpawn, hitPose.position, uprightRotation);
+            // --- Spawn the chosen portal ---
+            Instantiate(portalToSpawn, hitPose.position, uprightRotation);
             portalHasSpawned = true;
             DisablePlaneDetection();
-            SetDebugText($"Portal spawned!");
+            Debug.Log("Portal spawned!");
 
-            // --- 3. Log the REVERSE comparison (World-to-Screen) ---
-            // Ask the camera: "Where on the screen is the 3D point I just spawned?"
-            // Use Camera.main, which ARFoundation automatically keeps in sync with the device camera
-            if (Camera.main != null)
+            // Hide the temperature text after spawning
+            if (temperatureText)
             {
-                Vector3 portalScreenPoint = Camera.main.WorldToScreenPoint(spawnedPortal.transform.position);
-                Debug.Log($"PROOF: The new portal's 3D position {hitPose.position} appears on screen at {portalScreenPoint.x}, {portalScreenPoint.y} pixels.");
+                temperatureText.gameObject.SetActive(false);
             }
-            else
-            {
-                Debug.LogWarning("Could not find 'MainCamera' to perform reverse (WorldToScreenPoint) check.");
-            }
-        }
-        else
-        {
-            SetDebugText("No AR plane hit. Try again.");
         }
     }
 
@@ -287,15 +290,5 @@ public class TapToPlace : MonoBehaviour
                 plane.gameObject.SetActive(false);
             }
         }
-    }
-
-    // Helper function to safely update the debug text
-    private void SetDebugText(string message)
-    {
-        if (debugText)
-        {
-            debugText.text = message;
-        }
-        Debug.Log(message); // Also log to console
     }
 }
