@@ -15,16 +15,23 @@ The first step was to configure the AR environment using **AR Foundation**.
 I created an **AR Default Plane** prefab that acts as a visual representation of detected surfaces.
 
 I attached these key components:
-- **AR Plane** – detects and tracks surfaces.
-- **AR Plane Mesh Visualizer** – renders the detected plane mesh.
-- **Mesh Collider**, **Mesh Filter**, and **Mesh Renderer** – handle collision, geometry, and rendering.
-- **Line Renderer** – outlines detected planes (used for visual feedback).
+
+- **AR Plane** – detects and tracks surfaces
+- **AR Plane Mesh Visualizer** – renders the detected plane mesh
+- **Mesh Collider**, **Mesh Filter**, and **Mesh Renderer** – handle collision, geometry, and rendering
+- **Line Renderer** – outlines detected planes (used for visual feedback)
 
 Then, I linked this prefab in the **AR Plane Manager** under the **XR Origin (AR Rig)** and set the **Detection Mode** to `Vertical`.  
 This ensures the system detects walls and other upright surfaces instead of floors or tables.
 
+<br>
+
 ![Screenshot 2025-11-09 124524.png](Images/Week2/Screenshot%202025-11-09%20124524.png)
+
+<br>
+
 ![Screenshot 2025-11-09 130453.png](Images/Week2/Screenshot%202025-11-09%20130453.png)
+
 ---
 
 ## Detecting User Touch Input
@@ -33,17 +40,21 @@ After confirming that plane detection worked, I moved on to detecting user taps.
 For this, I added an **AR Raycast Manager** to the XR Origin. It casts a ray from the device’s camera through the touch point and checks for intersections with detected planes.
 
 To debug touch input, I built a **simple UI** using Unity’s Canvas system:
-- A **Panel** as background.
-- A **Text** element that updates dynamically with raycast results.
 
+- A **Panel** as the background
+- A **Text** element that updates dynamically with raycast results
+
+<br>
 
 ![Screenshot 2025-11-09 134208.png](Images/Week2/Screenshot%202025-11-09%20134208.png)
+
+<br>
 
 ![Screenshot 2025-11-09 134239.png](Images/Week2/Screenshot%202025-11-09%20134239.png)
 
 ---
 
-## Implementation – The TapToPlace Script
+## Implementation – The `TapToPlace` Script
 
 The input and raycast logic are handled by the `TapToPlace` script.  
 It supports both **mobile touch** and **mouse input** in the Editor, making testing easier.
@@ -99,8 +110,10 @@ public class TapToPlace : MonoBehaviour
     }
 }
 ```
-![Screenshot 2025-11-09 140409.png](Images/Week2/Screenshot%202025-11-09%20140409.png)
 
+<br>
+
+![Screenshot 2025-11-09 140409.png](Images/Week2/Screenshot%202025-11-09%20140409.png)
 
 ---
 
@@ -116,6 +129,6 @@ This verified that **plane detection**, **input handling**, and **raycasting** w
 ## Reflection
 
 The main challenge this week was figuring out how to detect **vertical surfaces**.  
-I learned how AR Foundation uses **trackable types** to distinguish between surfaces, and how the **AR Raycast Manager** ties user interaction to detected geometry.
+I learned how AR Foundation uses **trackable types** to distinguish between surfaces and how the **AR Raycast Manager** ties user interaction to detected geometry.
 
 ---

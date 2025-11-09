@@ -294,16 +294,13 @@ public class TapToPlace : MonoBehaviour {
 I built the four levels from the same base environment to save time. The **differences** come from **sky planes** and **particles**:
 
 - **Sunny:** blue sky, no rain/snow.  
-  ![Screenshot 2025-11-09 195214.png](Images/Week4/Screenshot%202025-11-09%20195214.png)
-
+  ![Screenshot 2025-11-09 172726.png](Images/Week4/Screenshot%202025-11-09%20172726.png)
 - **Rainy:** grey sky + rain particle system.  
-  ![Screenshot 2025-11-09 172921.png](Images/Week4/Screenshot%202025-11-09%20172921.png)
-
+ ![Screenshot 2025-11-09 172820.png](Images/Week4/Screenshot%202025-11-09%20172820.png)
 - **Cloudy:** grey sky without particles.  
-  ![Screenshot 2025-11-09 173054.png](Images/Week4/Screenshot%202025-11-09%20173054.png)
-
+  ![Screenshot 2025-11-09 172921.png](Images/Week4/Screenshot%202025-11-09%20172921.png)
 - **Snowy:** blue sky, edit rain particle system to act like snow.
-- ![Screenshot 2025-11-09 195214.png](Images/Week4/Screenshot%202025-11-09%20195214.png)
+![Screenshot 2025-11-09 173054.png](Images/Week4/Screenshot%202025-11-09%20173054.png)
 
 Each portal prefab references the **matching level** and I angled the level root so, when you look through the glass, the street scene lines up with the user’s view.
 
