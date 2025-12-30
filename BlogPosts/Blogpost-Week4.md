@@ -335,7 +335,7 @@ I was inspired by Unity´s AR Essentials course so I created a URP Renderer Data
     - Goal: draw level geometry **only** inside the window shape.
     - ![Screenshot 2025-11-09 212312.png](Images/Week4/Screenshot%202025-11-09%20212312.png)
 
-3) *(Optional)* **Portal Transparent Contents (Render Objects)** – for particle system
+3) **Portal Transparent Contents (Render Objects)** – for particle system
     - **Event:** *BeforeRenderingTransparents*
     - **Filters:** *Queue = Transparent*, *Layer Mask = PortalContents*
     - **Overrides:** keep stencil compare **Equal** (or use a material override).
@@ -359,7 +359,7 @@ Also I made sure the **AR Background Renderer Feature** is enabled in this URP R
 ## Reflection
 
 This week tied everything together.  
-I learned how to blend **data-driven AR** (real weather data) with **visual immersion**.  
+I learned how to blend **real weather data** with **visual immersion**.  
 The TMP UI makes feedback instant, and the portal feels connected to the real world.
 
 If I had more time, I’d:

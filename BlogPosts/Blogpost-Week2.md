@@ -5,7 +5,7 @@
 ## Overview
 
 This week, I focused on setting up **plane detection** and **touch input** for my AR Visualiser project.  
-The goal was to build the base system that can detect **vertical surfaces** and respond when the user taps on them — later, this interaction will trigger the **portal** that leads to different AR levels.
+The goal was to build the base system that can detect **vertical surfaces** and respond when the user taps on them.
 
 ---
 
@@ -22,7 +22,7 @@ I attached these key components:
 - **Line Renderer** – outlines detected planes (used for visual feedback)
 
 Then, I linked this prefab in the **AR Plane Manager** under the **XR Origin (AR Rig)** and set the **Detection Mode** to `Vertical`.  
-This ensures the system detects walls and other upright surfaces instead of floors or tables.
+This ensures the system detects only walls and other upright surfaces instead of floors or tables.
 
 <br>
 
