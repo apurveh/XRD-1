@@ -79,7 +79,21 @@ This project helped me practice:
 
 ## 📸 Demo
 
-> *(Will add screenshots or a demo video link here)*
+- **AR project video:** https://drive.google.com/file/d/1d1T9XLg5tizTB8M4Bz9okE1U6FnTbXh-/view?usp=sharing
+- **VR project video:** https://drive.google.com/file/d/1SDOlnKsA1FRAVjnPXHZoSw7s93iGwXVm/view?usp=sharing
+
+---
+
+## 📝 Blog Posts & Personal Reflection
+
+- [Blogpost Week 1](BlogPosts/Blogpost-Week1.md)
+- [Blogpost Week 2](BlogPosts/Blogpost-Week2.md)
+- [Blogpost Week 3](BlogPosts/Blogpost-Week3.md)
+- [Blogpost Week 4](BlogPosts/Blogpost-Week4.md)
+- [Blogpost Week 5](BlogPosts/Blogpost-Week5.md)
+- [Blogpost Week 6](BlogPosts/Blogpost-Week6.md)
+- [Blogpost Week 7](BlogPosts/Blogpost-Week7.md)
+- [Personal Reflection](BlogPosts/Personal-Reflection.md)
 
 ---
 
@@ -98,4 +112,3 @@ Built as part of the **XRD course** in VIA University College.
 Uses Unity’s AR Foundation and Open-Meteo API to visualise live weather through AR.
 
 ---
-
