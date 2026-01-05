@@ -37869,7 +37869,7 @@ PrefabInstance:
     - target: {fileID: 7914090130818248638, guid: 3578f02bfe530dc409b153c2c1186222,
         type: 3}
       propertyPath: m_Name
-      value: SunnyWeather 1
+      value: Snowy Weather
       objectReference: {fileID: 0}
     - target: {fileID: 7914090130818248638, guid: 3578f02bfe530dc409b153c2c1186222,
         type: 3}
