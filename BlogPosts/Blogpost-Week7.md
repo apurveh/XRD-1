@@ -5,7 +5,8 @@
 ## Overview
 
 The focus of the final lab week was on polishing the VR Quickdraw Simulator and making it feel like a complete and immersive experience rather than a technical prototype.
-This week, I focused on three main areas:
+At the start of the week, I also addressed a timing issue identified in the previous lab, where the enemy’s draw animation did not correctly reflect the intended reaction time. I resolved this through minor animation controller tuning
+For the rest of the week, I focused on three main areas:
 
 - Improving immersion through environment layout
 - Refactoring the duel system to remove automatic resets
